@@ -1,0 +1,263 @@
+/* ============================================
+   Google Review Slider - Style CSS
+   Hỗ trợ 3 layout: Slider, Grid, List
+   ============================================ */
+
+/* ============================================
+   COMMON STYLES - Chung cho tất cả layout
+   ============================================ */
+
+.grs-slider-container,
+.grs-grid-container,
+.grs-list-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.grs-review-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grs-review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.grs-review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.grs-author-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.grs-author-info {
+    flex: 1;
+}
+
+.grs-author-name {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.grs-stars {
+    display: flex;
+    gap: 2px;
+}
+
+.grs-star {
+    color: #ddd;
+    font-size: 18px;
+}
+
+.grs-star.filled {
+    color: #fbbc04;
+}
+
+.grs-review-content {
+    flex: 1;
+    margin-bottom: 16px;
+}
+
+.grs-review-content p {
+    margin: 0;
+    line-height: 1.6;
+    color: #666;
+    font-size: 14px;
+}
+
+.grs-review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.grs-review-time {
+    font-size: 12px;
+    color: #999;
+}
+
+.grs-google-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* ============================================
+   SLIDER LAYOUT
+   ============================================ */
+
+.grs-swiper {
+    padding: 20px 50px 60px;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    color: #4285f4;
+}
+
+.swiper-pagination-bullet-active {
+    background: #4285f4;
+}
+
+/* ============================================
+   GRID LAYOUT
+   ============================================ */
+
+.grs-grid-container {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+/* Grid với số cột cố định */
+.grs-grid-container.grs-columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grs-grid-container.grs-columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grs-grid-container.grs-columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.grs-grid-container.grs-columns-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.grs-grid-item {
+    display: flex;
+}
+
+/* ============================================
+   LIST LAYOUT
+   ============================================ */
+
+.grs-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.grs-list-item {
+    width: 100%;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .grs-grid-container.grs-columns-4,
+    .grs-grid-container.grs-columns-5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Mobile Landscape */
+@media (max-width: 768px) {
+    .grs-swiper {
+        padding: 20px 40px 60px;
+    }
+    
+    .grs-review-card {
+        padding: 16px;
+    }
+    
+    .grs-grid-container.grs-columns-3,
+    .grs-grid-container.grs-columns-4,
+    .grs-grid-container.grs-columns-5 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile Portrait */
+@media (max-width: 576px) {
+    .grs-slider-container,
+    .grs-grid-container,
+    .grs-list-container {
+        padding: 10px;
+    }
+    
+    .grs-swiper {
+        padding: 10px 30px 50px;
+    }
+    
+    .grs-grid-container,
+    .grs-grid-container.grs-columns-2,
+    .grs-grid-container.grs-columns-3,
+    .grs-grid-container.grs-columns-4,
+    .grs-grid-container.grs-columns-5 {
+        grid-template-columns: 1fr;
+    }
+    
+    .grs-author-photo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .grs-author-name {
+        font-size: 14px;
+    }
+    
+    .grs-review-content p {
+        font-size: 13px;
+    }
+}
+
+/* ============================================
+   LOADING STATE (Optional)
+   ============================================ */
+
+.grs-loading {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+.grs-loading:after {
+    content: "...";
+    animation: grs-dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes grs-dots {
+    0%, 20% { content: "."; }
+    40% { content: ".."; }
+    60%, 100% { content: "..."; }
+}
+
+/* ============================================
+   ERROR STATE (Optional)
+   ============================================ */
+
+.grs-error {
+    background: #fee;
+    border: 1px solid #fcc;
+    border-radius: 8px;
+    padding: 16px;
+    color: #c33;
+    text-align: center;
+}
