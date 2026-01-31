@@ -73,6 +73,7 @@ class TNDRESL_Review_Slider {
         new TNDRESL_Admin($this->settings);
     }
     
+    
     private function init_hooks() {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         register_activation_hook(__FILE__, array($this, 'activate'));

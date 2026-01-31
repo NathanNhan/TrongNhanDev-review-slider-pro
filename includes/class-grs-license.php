@@ -15,7 +15,7 @@ class TNDRESL_License_Manager {
     
     public function __construct() {
         // Hook vào admin menu
-        add_action('admin_menu', array($this, 'add_license_menu'));
+        add_action('admin_menu', array($this, 'add_license_menu'), 11);
         
         // Hook để xử lý form submit
         add_action('admin_init', array($this, 'handle_license_form'));
@@ -25,6 +25,20 @@ class TNDRESL_License_Manager {
         
         // Thêm link Settings vào plugin list
         add_filter('plugin_action_links_' . plugin_basename(TRONRESL_GRS_PATH . 'TrongNhanDev-review-slider.php'), array($this, 'add_settings_link'));
+    }
+
+
+    private function get_secret() {
+        $secret_file = __DIR__ . '/.secret.php';
+        if(file_exists($secret_file)) {
+            $secret = include $secret_file;
+            if(is_array($secret)) {
+                return isset($secret['secret']) ? $secret['secret'] : [];
+            }
+            if(!empty($secret)) {
+                return $secret;
+            } 
+        } 
     }
     
     /**
@@ -248,18 +262,12 @@ class TNDRESL_License_Manager {
             // Xác thực license với server
             $verification = $this->verify_license($license_key);
             
-            if ($verification['valid']) {
-                update_option($this->option_name, $license_key);
-                update_option($this->option_name . '_status', true);
-                update_option($this->option_name . '_activated_time', time());
-                update_option($this->option_name . '_data', $verification['data']);
-                
-                wp_redirect(add_query_arg('activated', 'true', admin_url('admin.php?page=tndresl-license')));
-                exit;
+            if($verification["success"]) {
+                wp_redirect(add_query_arg('activated', true, admin_url('admin.php?page=tndresl-license')));
             } else {
-                wp_redirect(add_query_arg('error', urlencode($verification['message']), admin_url('admin.php?page=tndresl-license')));
-                exit;
+                wp_redirect(add_query_arg('error', true, admin_url('admin.php?page=tndresl-license')));
             }
+            exit;
         }
         
         // Hủy kích hoạt license
@@ -275,43 +283,80 @@ class TNDRESL_License_Manager {
      * Xác thực license key với server
      */
     private function verify_license($license_key) {
-        // Phương pháp 1: Xác thực với API server (Recommended)
-        $response = wp_remote_post($this->api_url, array(
-            'body' => array(
-                'license_key' => $license_key,
-                'domain' => get_site_url(),
-                'plugin' => $this->plugin_name,
-                'version' => $this->plugin_version,
-                'action' => 'activate'
-            ),
-            'timeout' => 15,
-            'sslverify' => true
-        ));
-        
-        if (is_wp_error($response)) {
-            // Nếu không kết nối được server, sử dụng offline validation
-            return $this->offline_verify_license($license_key);
-        }
-        
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
-        
-        if (isset($data['valid']) && $data['valid'] === true) {
-            return array(
-                'valid' => true,
-                'message' => 'License hợp lệ',
-                'data' => $data
+        // Bước 1: Kiểm tra format key 
+        if (!preg_match('/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/', $license_key)) {
+            return array( 
+                'success' => false,
+                'message' => 'Format license key không đúng.Phải có dạng:xxxx-xxxx-xxxx-xxxx'
             );
         }
-        
-        return array(
-            'valid' => false,
-            'message' => isset($data['message']) ? $data['message'] : 'License key không hợp lệ',
-            'data' => null
+        //Bước 2:verify checksum với secret
+        $parts = explode('-', $license_key);
+        $secret = $this->get_secret();
+        $expected_checksum = strtoupper(substr(md5($parts[0] . $parts[1] . $parts[2] . $secret), 0, 4));
+        if($parts[3] !== $expected_checksum) {
+            return 
+            array( 
+                'success' => false,
+                'message' => 'License key ko hợp lệ.'
+            );
+        }
+        //Bước 3: Kiểm tra xem key này đã được sử dụng chưa
+        $used_keys = get_option("tndresl_used_key",array());
+        //Giả sử 
+        //  array( 
+        //     "domain" => 'abc.com',
+        //     "key"    => '',
+        //     "time"
+        // )
+        /*$used_keys = [
+            "GHA0-KHJF-KHTY-FS09" => "plugin-develop.test"
+        ] */
+        $current_domain = $this->get_domain();
+        if(isset($used_keys[$license_key])) {
+            $used_domain = $used_keys[$license_key];
+
+            //Nếu đã dùng cho domain khác
+            if($used_domain !== $current_domain) {
+                return array( 
+                    "success" => false, 
+                    "message" => "License key này đã được sử dụng cho domain:" . $used_domain
+                );
+            }
+        }
+
+        //Bước 4: Lưu license
+        update_option($this->option_name, $license_key);
+        update_option($this->option_name .'_status', true);
+        update_option($this->option_name . '_activated_time', time());
+        update_option($this->option_name . '_domain', $current_domain);
+
+        //Bước 5: Đánh dấu key đã được sử dụng
+        $used_keys[$license_key] = $current_domain;
+        //mô phỏng dòng code 338
+        /*
+        $used_keys = [];
+        $used_keys = [
+            "GHA0-KHJF-KHTY-FS09" => ""
+        ] 
+        //$used_keys[$license_key] = $current_domain;
+        /*$used_keys = [
+            "GHA0-KHJF-KHTY-FS09" => "plugin-develop.test"
+        ] */
+        update_option('tndresl_used_key', $used_keys);
+        return array( 
+            'success' => true, 
+            'message' => 'Kích hoạt thành công'
         );
-        
-        // Phương pháp 2: Nếu chưa có API server, dùng offline validation
-        // return $this->offline_verify_license($license_key);
+
+    }
+
+    private function get_domain() {
+        $domain = get_site_url(); 
+        //https:plugin-develop.test/
+        $domain = preg_replace("#^https?://#","", $domain);
+        $domain = rtrim($domain, "/");
+        return $domain;
     }
     
     /**
