@@ -20,7 +20,7 @@ class TNDRESL_Frontend {
             'columns' => get_option('TNDRESL_grs_columns', 3)
         ), $atts);
         
-        $reviews = $this->api_handler->get_reviews($atts['limit']);
+        $reviews = $this->api_handler->TNDRESL_get_reviews($atts['limit']);
         
         if (empty($reviews)) {
             return '<p>Không có review để hiển thị. Vui lòng kiểm tra cài đặt API.</p>';
