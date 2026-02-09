@@ -38,13 +38,13 @@ class TNDRESL_Review_Slider {
         $this->init_license();
         
         // Chỉ khởi tạo plugin nếu license đã active
-        if ($this->is_license_valid()) {
+        // if ($this->is_license_valid()) {
             $this->init_components();
             $this->init_hooks();
-        } else {
-            // Nếu chưa có license, chỉ hiển thị thông báo
-            add_action('admin_notices', array($this, 'license_required_notice'));
-        }
+        // } else {
+        //     // Nếu chưa có license, chỉ hiển thị thông báo
+        //     add_action('admin_notices', array($this, 'license_required_notice'));
+        // }
     }
     
     private function load_dependencies() {
