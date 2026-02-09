@@ -1,194 +1,92 @@
-# Google Review Slider Pro - Hướng Dẫn Cập Nhật
+=== Trongnhandev Review Slider Pro ===
+Donate link: https://trongnhandev.com/
+Tags: review, slider
+Requires at least: 6.3
+Tested up to: 6.9
+Stable tag: 1.5
+Requires PHP: 8.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-## Tính Năng Mới: Chọn Layout Hiển Thị
+Upload the tnd Review Slider plugin to your blog, activate it, and then enter your place ID and API key from tnd.
 
-Plugin đã được cập nhật với 3 kiểu hiển thị:
-1. **Slider** - Hiển thị dạng slider với nút điều hướng
-2. **Grid** - Hiển thị dạng lưới cột (2-5 cột)
-3. **List** - Hiển thị dạng danh sách dọc
+1, 2, 3: You’re done!
 
----
+== Description ==
+User can upload this plugin to wordpress, extract it, type place ID to settings and use shortcode name as [tnd_review_slider limit=10] for display data.
+Major features in tnd Review Slider include:
+Display review tnd from Place ID 
+Control limit to display reviews
+Use shortcode to display reviews list
 
-## Cài Đặt
+== External services ==
 
-### Bước 1: Thay Thế Files
+This plugin connects to an API to obtain Review slider information, it's needed to show the Google Review information in the shortcode.
 
-Thay thế các file sau trong plugin:
+It sends the user's location every time the shortcode is loaded by using Google Map API. You need to pass an place ID and Google API key for configuration. 
+Besides, you can control shortcode attrbutes with params: limit which can display how many slide items show in frontend. [terms of use](https://www.google.com/help/terms_maps/), [privacy policy](https://policies.google.com/privacy)
 
-```
-/includes/class-grs-settings.php    → Thay bằng file mới
-/includes/class-grs-frontend.php    → Thay bằng file mới
-/assets/css/style.css               → Thay bằng file mới
-```
+Example::
+includes/class-grs-api-handler.php:40 'https://maps.googleapis.com/maps/api/place/details/json?place_id=%s&fields=name,rating,reviews,user_ratings_total&key=%s',
 
-### Bước 2: Cài Đặt Trong Admin
+A few notes about the sections above:
 
-1. Vào **WordPress Admin** → **Google Reviews** → **Settings**
-2. Tìm section **"Cài Đặt Hiển Thị"**
-3. Chọn **"Kiểu Hiển Thị"**:
-   - Slider (Swiper)
-   - Grid (Lưới cột)
-   - List (Danh sách)
-4. Nếu chọn **Grid**, chọn số cột (2-5 cột)
-5. Click **"Save Changes"**
+* nhantrong13091997
+* tnd,tnd review slider,tnd api
+* 5.6
+* 6.5
+* 1.0.0
 
----
+Note that the `readme.txt` value of stable tag is the one that is the defining one for the plugin.  If the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used for displaying information about the plugin.
 
-## Sử Dụng Shortcode
+If you develop in trunk, you can update the trunk `readme.txt` to reflect changes in your in-development version, without having that information incorrectly disclosed about the current stable version that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
 
-### Cách 1: Sử Dụng Setting Mặc Định
+If no stable tag is provided, your users may not get the correct version of your code.
 
-```php
-[google_review_slider limit="10"]
-```
-→ Sẽ sử dụng layout và số cột đã cài đặt trong Settings
+== Frequently Asked Questions ==
 
-### Cách 2: Ghi Đè Bằng Tham Số Shortcode
+= How to use this plugin ? =
 
-#### Hiển thị dạng Grid 3 cột:
-```php
-[google_review_slider limit="12" layout="grid" columns="3"]
-```
+Use shortcode with name as [tnd_review_slider limit=10] to display data
 
-#### Hiển thị dạng Grid 4 cột:
-```php
-[google_review_slider limit="16" layout="grid" columns="4"]
-```
+= How to get placeID from tnd api ? =
 
-#### Hiển thị dạng List:
-```php
-[google_review_slider limit="8" layout="list"]
-```
+Access to this tnd map api to get placeID based on address.
 
-#### Hiển thị dạng Slider:
-```php
-[google_review_slider limit="10" layout="slider"]
-```
+== Screenshots ==
 
----
+1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Screenshots are stored in the /assets directory.
+2. This is the second screen shot
 
-## Các Tham Số Shortcode
+== Changelog ==
+= 1.5 =
+Fix bug group settings
+= 1.4 =
+* fix bug
+= 1.3 =
+* updated prefix for plugin correctly.
+= 1.2 =
+* updated feedbacks from wordpress.org.
+= 1.0 =
+* This is my final version for TrongNhanDev Review Slider.
 
-| Tham số | Giá trị | Mô tả | Mặc định |
-|---------|---------|-------|----------|
-| `limit` | Số nguyên | Số lượng review hiển thị | 10 |
-| `layout` | slider, grid, list | Kiểu hiển thị | Lấy từ Settings |
-| `columns` | 2, 3, 4, 5 | Số cột (chỉ cho Grid) | Lấy từ Settings |
 
----
+== A brief Markdown Example ==
 
-## Responsive Design
+Markdown is what the parser uses to process much of the readme file.
 
-### Desktop (>992px)
-- **Grid 5 cột**: Hiển thị 5 cột
-- **Grid 4 cột**: Hiển thị 4 cột
-- **Grid 3 cột**: Hiển thị 3 cột
-- **Grid 2 cột**: Hiển thị 2 cột
+[markdown syntax]: https://daringfireball.net/projects/markdown/syntax
 
-### Tablet (768px - 992px)
-- **Grid 4-5 cột**: Tự động xuống 3 cột
-- **Grid 2-3 cột**: Giữ nguyên
+Ordered list:
 
-### Mobile Landscape (576px - 768px)
-- **Grid 3-5 cột**: Tự động xuống 2 cột
-- **Grid 2 cột**: Giữ nguyên
+1. Display review slider with shortcode
+1. Display review slider from tnd via placeID and limit from shortcode attribute
+1. Apply cache to boost performance
 
-### Mobile Portrait (<576px)
-- **Tất cả Grid**: Tự động xuống 1 cột (full width)
+Unordered list:
 
----
+* We have some security for this plugin
+* We have developer to maintaince this plugin
 
-## Ví Dụ Thực Tế
 
-### Trang Chủ - Slider
-```php
-[google_review_slider limit="6" layout="slider"]
-```
-
-### Trang Reviews - Grid 3 Cột
-```php
-[google_review_slider limit="9" layout="grid" columns="3"]
-```
-
-### Sidebar - List 5 Review
-```php
-[google_review_slider limit="5" layout="list"]
-```
-
-### Landing Page - Grid 4 Cột
-```php
-[google_review_slider limit="12" layout="grid" columns="4"]
-```
-
----
-
-## Tùy Chỉnh CSS (Optional)
-
-Nếu muốn tùy chỉnh thêm, thêm CSS vào theme:
-
-```css
-/* Tùy chỉnh màu sắc */
-.grs-review-card {
-    background: #f9f9f9; /* Màu nền card */
-    border: 1px solid #e0e0e0; /* Viền */
-}
-
-/* Tùy chỉnh khoảng cách Grid */
-.grs-grid-container {
-    gap: 30px; /* Khoảng cách giữa các card */
-}
-
-/* Tùy chỉnh màu star */
-.grs-star.filled {
-    color: #ff9800; /* Màu sao */
-}
-```
-
----
-
-## Troubleshooting
-
-### Vấn đề: Layout không thay đổi
-**Giải pháp**: 
-1. Xóa cache browser (Ctrl + F5)
-2. Xóa cache plugin (nếu dùng W3 Total Cache, WP Rocket...)
-3. Kiểm tra xem đã Save Settings chưa
-
-### Vấn đề: Grid hiển thị sai số cột
-**Giải pháp**:
-1. Kiểm tra shortcode có đúng syntax không
-2. Kiểm tra trong Settings đã chọn đúng số cột chưa
-3. Xóa cache CSS
-
-### Vấn đề: Responsive không hoạt động
-**Giải pháp**:
-1. Kiểm tra file `style.css` đã được thay thế chưa
-2. Xóa cache
-3. Test trên trình duyệt khác
-
----
-
-## Changelog
-
-### Version 2.0.0
-- ✅ Thêm tính năng chọn layout (Slider, Grid, List)
-- ✅ Thêm tùy chọn số cột cho Grid (2-5 cột)
-- ✅ Cải thiện responsive design
-- ✅ Tối ưu hóa performance
-- ✅ Thêm tham số shortcode để ghi đè settings
-
----
-
-## Hỗ Trợ
-
-Nếu có vấn đề, vui lòng:
-1. Kiểm tra file đã thay thế đúng chưa
-2. Xóa cache
-3. Kiểm tra console browser có lỗi JavaScript không
-4. Liên hệ support
-
----
-
-**Developed by TrongNhanDev**
-**Version**: 2.0.0
-**Last Updated**: January 2026
+`<?php code(); ?>`
