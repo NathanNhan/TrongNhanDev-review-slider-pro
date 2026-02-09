@@ -3,7 +3,7 @@ Donate link: https://trongnhandev.com/
 Tags: review, slider
 Requires at least: 6.3
 Tested up to: 6.9
-Stable tag: 1.5
+Stable tag: 1.6
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -59,6 +59,8 @@ Access to this tnd map api to get placeID based on address.
 2. This is the second screen shot
 
 == Changelog ==
+= 1.6 =
+Fix Bug
 = 1.5 =
 Fix bug group settings
 = 1.4 =
