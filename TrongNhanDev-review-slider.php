@@ -17,7 +17,22 @@ define('TRONRESL_GRS_URL', plugin_dir_url(__FILE__));
 
 /**
  * Main Plugin Class
+ * 
  */
+// 1. Nhúng thư viện
+    require_once __DIR__ . '/plugin-update-checker/plugin-update-checker.php';
+
+    use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+        // 2. Thiết lập bộ kiểm tra cập nhật
+    $myUpdateChecker = PucFactory::buildUpdateChecker(
+        'https://github.com/NathanNhan/TrongNhanDev-review-slider-pro/', // Link repo của bạn
+        __FILE__, // Đường dẫn file hiện tại
+        'tnd-review-slider-pro' // Slug của plugin (thường là tên thư mục)
+    );
+
+    // 3. (Tùy chọn) Nếu bạn muốn kiểm tra dựa trên "Releases" thay vì "Tags"
+    // $myUpdateChecker->getVcsApi()->enableReleaseAssets();
 class TNDRESL_Review_Slider {
     
     private static $instance = null;
@@ -34,6 +49,7 @@ class TNDRESL_Review_Slider {
     }
     
     private function __construct() {
+        
         $this->load_dependencies();
         $this->init_license();
         
