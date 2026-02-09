@@ -4,7 +4,7 @@
  */
 if (!defined('ABSPATH')) exit;
 
-class TNDRESL_Frontend {
+class TNDRESL_Frontend_Pro {
     
     private $api_handler;
     
@@ -31,6 +31,7 @@ class TNDRESL_Frontend {
         // Render dựa theo layout
         switch ($atts['layout']) {
             case 'grid':
+                echo "Đã chạy được tính năng pro cho dạng grid";
                 $this->TNDRESL_render_grid_html($reviews, $atts['columns']);
                 break;
             case 'list':

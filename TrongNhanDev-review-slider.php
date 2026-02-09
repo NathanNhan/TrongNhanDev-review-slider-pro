@@ -45,6 +45,9 @@ class TNDRESL_Review_Slider {
         //     // Nếu chưa có license, chỉ hiển thị thông báo
         //     add_action('admin_notices', array($this, 'license_required_notice'));
         // }
+        if(!$this->is_license_valid()) {
+            add_action('admin_notices', array($this, 'license_required_notice'));
+        }
     }
     
     private function load_dependencies() {
@@ -53,7 +56,8 @@ class TNDRESL_Review_Slider {
         
         require_once TRONRESL_GRS_PATH . 'includes/class-grs-api-handler.php';
         require_once TRONRESL_GRS_PATH . 'includes/class-grs-settings.php';
-        require_once TRONRESL_GRS_PATH . 'includes/class-grs-frontend.php';
+        require_once TRONRESL_GRS_PATH . 'includes/class-grs-frontend-pro.php';
+        require_once TRONRESL_GRS_PATH . 'includes/class-grs-frontend-free.php';
         require_once TRONRESL_GRS_PATH . 'includes/class-grs-admin.php';
     }
     
@@ -69,7 +73,12 @@ class TNDRESL_Review_Slider {
     private function init_components() {
         $this->api_handler = new TNDRESL_API_Handler();
         $this->settings = new TNDRESL_Settings();
-        $this->frontend = new TNDRESL_Frontend($this->api_handler);
+        if ($this->is_license_valid()) {
+        $this->frontend = new TNDRESL_Frontend_Pro($this->api_handler);
+        } else {
+            //Sử dụng bản miễn phí
+        $this->frontend = new TNDRESL_Frontend_Free($this->api_handler);
+        }
         new TNDRESL_Admin($this->settings);
     }
     
@@ -82,9 +91,6 @@ class TNDRESL_Review_Slider {
     
     public function enqueue_scripts() {
         // Chỉ load scripts nếu license active
-        if (!$this->is_license_valid()) {
-            return;
-        }
         
         wp_enqueue_style('tndresl-swiper-css', plugin_dir_url( __FILE__ ) . "/assets/css/swiper-bundle.min.css", array(), '11.0.0', 'all');
         wp_enqueue_style('tndresl-grs-style', TRONRESL_GRS_URL . 'assets/css/style.css', array(), TRONRESL_GRS_VERSION);
@@ -115,7 +121,7 @@ class TNDRESL_Review_Slider {
         ?>
         <div class="notice notice-error">
             <p>
-                <strong>TrongNhanDev Review Slider Pro</strong> yêu cầu kích hoạt license để sử dụng. 
+                <strong>TrongNhanDev Review Slider Pro</strong> yêu cầu kích hoạt license để sử dụng hoặc nếu license key hết hạn, hãy liên hệ đến 0809876342 để nhận license key mới. 
                 <a href="<?php echo admin_url('admin.php?page=tndresl-license'); ?>" class="button button-primary" style="margin-left: 10px;">
                     Kích Hoạt License
                 </a>
