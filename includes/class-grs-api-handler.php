@@ -10,8 +10,8 @@ class TNDRESL_API_Handler {
     private $cache_duration = 3600; // 1 hour
     
     public function __construct() {
-        $this->api_key = get_option('TRONRESL_grs_api_key');
-        $this->place_id = get_option('TRONRESL_grs_place_id');
+        $this->api_key = get_option('TNDRESL_grs_api_key');
+        $this->place_id = get_option('TNDRESL_grs_place_id');
     }
     
     public function TNDRESL_get_reviews($limit = 10) {
@@ -32,6 +32,7 @@ class TNDRESL_API_Handler {
     }
     
     private function TNDRESL_fetch_reviews_from_api($limit) {
+    
         if (empty($this->api_key) || empty($this->place_id)) {
             return array();
         }
@@ -49,7 +50,9 @@ class TNDRESL_API_Handler {
         }
         
         $body = wp_remote_retrieve_body($response);
+        
         $data = json_decode($body, true);
+        
         
         if (isset($data['result']['reviews'])) {
             return array_slice($data['result']['reviews'], 0, $limit);
