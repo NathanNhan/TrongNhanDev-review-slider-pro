@@ -3,15 +3,15 @@
  * Plugin Name: Trongnhandev Review Slider Pro
  * Plugin URI: https://trongnhandev.com
  * Description: Display TrongNhanDev Review Slider via Google place API.
- * Version: 1.6
+ * Version: 1.5
  * Author: Trong Nhan Dev
  * License: GPL2
- * Text Domain: tnd-review-slider-pro
+ * Text Domain: TrongNhanDev-review-slider-pro
  */
 
 if (!defined('ABSPATH')) exit;
 
-define('TRONRESL_GRS_VERSION', '1.6');
+define('TRONRESL_GRS_VERSION', '1.5');
 define('TRONRESL_GRS_PATH', plugin_dir_path(__FILE__));
 define('TRONRESL_GRS_URL', plugin_dir_url(__FILE__));
 
@@ -28,7 +28,7 @@ define('TRONRESL_GRS_URL', plugin_dir_url(__FILE__));
     $myUpdateChecker = PucFactory::buildUpdateChecker(
         'https://github.com/NathanNhan/TrongNhanDev-review-slider-pro/', // Link repo của bạn
         __FILE__, // Đường dẫn file hiện tại
-        'tnd-review-slider-pro' // Slug của plugin (thường là tên thư mục)
+        'TrongNhanDev-review-slider-pro' // Slug của plugin (thường là tên thư mục)
     );
 
     // 3. (Tùy chọn) Nếu bạn muốn kiểm tra dựa trên "Releases" thay vì "Tags"
