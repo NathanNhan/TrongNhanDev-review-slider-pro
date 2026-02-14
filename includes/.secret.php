@@ -1,3 +1,3 @@
 <?php 
 
-return "TRONGNHANDEV_2024";
+return "TRONGNHANDEV_2026";
